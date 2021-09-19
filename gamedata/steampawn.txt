@@ -1,0 +1,32 @@
+"Games"
+{
+	"tf"
+	{
+		"Functions"
+		{
+			"ISteamGameServer::WasRestartRequested()"
+			{
+				"offset"	"ISteamGameServer::WasRestartRequested()"
+				"hooktype"	"raw"
+				"this"		"address"
+				"return"	"bool"
+			}
+		}
+		"Signatures"
+		{
+			"Steam3Server()"
+			{
+				"library"	"engine"
+				"linux"		"@_Z12Steam3Serverv"
+			}
+		}
+		"Offsets"
+		{
+			"ISteamGameServer::WasRestartRequested()"
+			{
+				// vcalled early in CBaseServer::CheckMasterServerRequestRestart()
+				"linux"		"11"
+			}
+		}
+	}
+}
