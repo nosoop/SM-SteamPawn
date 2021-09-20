@@ -22,6 +22,11 @@
 		}
 		"Offsets"
 		{
+			"ISteamGameServer::BLoggedOn()"
+			{
+				// vcalled in status(CCommand const&)
+				"linux"		"8"
+			}
 			"ISteamGameServer::WasRestartRequested()"
 			{
 				// vcalled early in CBaseServer::CheckMasterServerRequestRestart()

@@ -12,7 +12,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.0"
+#define PLUGIN_VERSION "1.1.0"
 public Plugin myinfo = {
 	name = "SteamPawn",
 	author = "nosoop",
@@ -22,6 +22,7 @@ public Plugin myinfo = {
 }
 
 Handle g_SDKCallGetSteam3Server;
+Handle g_SDKCallIsLoggedOn;
 
 Handle g_DHookRestartRequested;
 
@@ -29,6 +30,8 @@ GlobalForward g_FwdRestartRequested;
 
 public APLRes AskPluginLoad2(Handle hPlugin, bool late, char[] error, int maxlen) {
 	RegPluginLibrary("steampawn");
+	
+	CreateNative("SteamPawn_IsSteamConnected", Native_IsSteamConnected);
 	
 	return APLRes_Success;
 }
@@ -54,6 +57,14 @@ public void OnPluginStart() {
 		SetFailState("Failed to initialize SDKCall to Steam3Server");
 	}
 	
+	StartPrepSDKCall(SDKCall_Raw);
+	PrepSDKCall_SetFromConf(hGameConf, SDKConf_Virtual, "ISteamGameServer::BLoggedOn()");
+	PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+	g_SDKCallIsLoggedOn = EndPrepSDKCall();
+	if (!g_SDKCallIsLoggedOn) {
+		SetFailState("Failed to initialize SDKCall to ISteamGameServer::BLoggedOn()");
+	}
+	
 	delete hGameConf;
 	
 	Address pSteam3Server = GetSteamGameServer();
@@ -73,6 +84,15 @@ MRESReturn OnRestartRequested(Address pSteam3Server, Handle hReturn) {
 		Call_StartForward(g_FwdRestartRequested);
 		Call_Finish();
 	}
+}
+
+int Native_IsSteamConnected(Handle plugin, int argc) {
+	Address pSteam3Server = GetSteamGameServer();
+	if (!pSteam3Server) {
+		return false;
+	}
+	
+	return !!SDKCall(g_SDKCallIsLoggedOn, pSteam3Server);
 }
 
 Address GetSteamGameServer() {

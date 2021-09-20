@@ -12,6 +12,11 @@
  */
 forward void SteamPawn_OnRestartRequested();
 
+/**
+ * Returns whether the game is connected to Steam.
+ */
+native bool SteamPawn_IsSteamConnected();
+
 public SharedPlugin __pl_steampawn = {
 	name = "steampawn",
 	file = "steampawn.smx",
