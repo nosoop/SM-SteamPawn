@@ -26,6 +26,7 @@ Handle g_SDKCallIsLoggedOn;
 
 Handle g_DHookRestartRequested;
 
+int g_nFakePorts;
 Address g_pnFakeIP;
 Address g_parFakePorts;
 
@@ -36,6 +37,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool late, char[] error, int maxlen
 	
 	CreateNative("SteamPawn_IsSteamConnected", Native_IsSteamConnected);
 	CreateNative("SteamPawn_GetSDRFakeIP", Native_GetSDRFakeIP);
+	CreateNative("SteamPawn_GetSDRFakePort", Native_GetSDRFakePort);
 	
 	return APLRes_Success;
 }
@@ -72,6 +74,10 @@ public void OnPluginStart() {
 	g_pnFakeIP = GameConfGetAddress(hGameConf, "g_nFakeIP");
 	g_parFakePorts = GameConfGetAddress(hGameConf, "g_arFakePorts");
 	
+	char strNumFakePorts[4];
+	GameConfGetKeyValue(hGameConf, "NumFakePorts", strNumFakePorts, sizeof(strNumFakePorts));
+	g_nFakePorts = StringToInt(strNumFakePorts);
+	
 	delete hGameConf;
 	
 	Address pSteam3Server = GetSteamGameServer();
@@ -106,6 +112,11 @@ int Native_GetSDRFakeIP(Handle plugin, int argc) {
 	return GetSDRFakeIP();
 }
 
+int Native_GetSDRFakePort(Handle plugin, int argc) {
+	int num = GetNativeCell(1);
+	return GetSDRFakePort(num);
+}
+
 Address GetSteamGameServer() {
 	Address pSteam3Server = SDKCall(g_SDKCallGetSteam3Server);
 	if (!pSteam3Server) {
@@ -116,4 +127,11 @@ Address GetSteamGameServer() {
 
 int GetSDRFakeIP() {
 	return LoadFromAddress(g_pnFakeIP, NumberType_Int32);
+}
+
+int GetSDRFakePort(int num) {
+	if (num < 0 || num >= g_nFakePorts) {
+		return 0;
+	}
+	return LoadFromAddress(g_parFakePorts + (num * 0x2), NumberType_Int16);
 }
