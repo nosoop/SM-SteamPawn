@@ -26,12 +26,16 @@ Handle g_SDKCallIsLoggedOn;
 
 Handle g_DHookRestartRequested;
 
+Address g_pnFakeIP;
+Address g_parFakePorts;
+
 GlobalForward g_FwdRestartRequested;
 
 public APLRes AskPluginLoad2(Handle hPlugin, bool late, char[] error, int maxlen) {
 	RegPluginLibrary("steampawn");
 	
 	CreateNative("SteamPawn_IsSteamConnected", Native_IsSteamConnected);
+	CreateNative("SteamPawn_GetSDRFakeIP", Native_GetSDRFakeIP);
 	
 	return APLRes_Success;
 }
@@ -65,6 +69,9 @@ public void OnPluginStart() {
 		SetFailState("Failed to initialize SDKCall to ISteamGameServer::BLoggedOn()");
 	}
 	
+	g_pnFakeIP = GameConfGetAddress(hGameConf, "g_nFakeIP");
+	g_parFakePorts = GameConfGetAddress(hGameConf, "g_arFakePorts");
+	
 	delete hGameConf;
 	
 	Address pSteam3Server = GetSteamGameServer();
@@ -95,10 +102,18 @@ int Native_IsSteamConnected(Handle plugin, int argc) {
 	return !!SDKCall(g_SDKCallIsLoggedOn, pSteam3Server);
 }
 
+int Native_GetSDRFakeIP(Handle plugin, int argc) {
+	return GetSDRFakeIP();
+}
+
 Address GetSteamGameServer() {
 	Address pSteam3Server = SDKCall(g_SDKCallGetSteam3Server);
 	if (!pSteam3Server) {
 		return Address_Null;
 	}
 	return DereferencePointer(pSteam3Server + view_as<Address>(0x04));
+}
+
+int GetSDRFakeIP() {
+	return LoadFromAddress(g_pnFakeIP, NumberType_Int32);
 }

@@ -2,6 +2,24 @@
 {
 	"tf"
 	{
+		"Addresses"
+		{
+			"g_nFakeIP"
+			{
+				"linux"
+				{
+					"signature"	"g_nFakeIP"
+				}
+			}
+			"g_arFakePorts"
+			{
+				"linux"
+				{
+					"signature"	"g_arFakePorts"
+				}
+			}
+			
+		}
 		"Functions"
 		{
 			"ISteamGameServer::WasRestartRequested()"
@@ -18,6 +36,17 @@
 			{
 				"library"	"engine"
 				"linux"		"@_Z12Steam3Serverv"
+			}
+			
+			"g_nFakeIP"
+			{
+				"library"	"engine"
+				"linux"		"@g_nFakeIP"
+			}
+			"g_arFakePorts"
+			{
+				"library"	"engine"
+				"linux"		"@g_arFakePorts"
 			}
 		}
 		"Offsets"

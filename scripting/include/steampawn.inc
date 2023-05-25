@@ -17,6 +17,12 @@ forward void SteamPawn_OnRestartRequested();
  */
 native bool SteamPawn_IsSteamConnected();
 
+/**
+ * Returns the "fake" IP address associated with the server for Steam Datagram Relay, or 0 if
+ * not active.
+ */
+native int SteamPawn_GetSDRFakeIP();
+
 public SharedPlugin __pl_steampawn = {
 	name = "steampawn",
 	file = "steampawn.smx",
