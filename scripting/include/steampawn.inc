@@ -18,15 +18,16 @@ forward void SteamPawn_OnRestartRequested();
 native bool SteamPawn_IsSteamConnected();
 
 /**
- * Returns the "fake" IP address associated with the server for Steam Datagram Relay, or 0 if
- * not active.
+ * Returns the "fake" IP address assigned to the server for Steam Datagram Relay, or 0 if
+ * not active / unsupported.
  */
 native int SteamPawn_GetSDRFakeIP();
 
 /**
- * Returns the "fake" port associated with the server for Steam Datagram Relay.
+ * Returns a "fake" port assigned to the server for Steam Datagram Relay.
  * 
- * @param num    Which port number to return.
+ * @param num    Which port number to return, starting from 0.
+ * @return       Port number or 0 if SDR is not active / unsupported or if num is out of bounds.
  */
 native int SteamPawn_GetSDRFakePort(int num);
 
