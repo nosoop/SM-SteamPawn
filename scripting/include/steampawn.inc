@@ -23,6 +23,13 @@ native bool SteamPawn_IsSteamConnected();
  */
 native int SteamPawn_GetSDRFakeIP();
 
+/**
+ * Returns the "fake" port associated with the server for Steam Datagram Relay.
+ * 
+ * @param num    Which port number to return.
+ */
+native int SteamPawn_GetSDRFakePort(int num);
+
 public SharedPlugin __pl_steampawn = {
 	name = "steampawn",
 	file = "steampawn.smx",

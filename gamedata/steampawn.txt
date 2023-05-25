@@ -62,5 +62,9 @@
 				"linux"		"11"
 			}
 		}
+		"Keys"
+		{
+			"NumFakePorts"	"2"
+		}
 	}
 }
