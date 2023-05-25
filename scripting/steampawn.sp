@@ -126,11 +126,14 @@ Address GetSteamGameServer() {
 }
 
 int GetSDRFakeIP() {
+	if (!g_pnFakeIP) {
+		return 0;
+	}
 	return LoadFromAddress(g_pnFakeIP, NumberType_Int32);
 }
 
 int GetSDRFakePort(int num) {
-	if (num < 0 || num >= g_nFakePorts) {
+	if (!g_parFakePorts || num < 0 || num >= g_nFakePorts) {
 		return 0;
 	}
 	return LoadFromAddress(g_parFakePorts + (num * 0x2), NumberType_Int16);
