@@ -10,6 +10,11 @@
 				{
 					"signature"	"g_nFakeIP"
 				}
+				"windows"
+				{
+					"signature"	"CSteam3Server::OnFakeIPResults()"
+					"read"		"37"
+				}
 			}
 			"g_arFakePorts"
 			{
@@ -17,8 +22,21 @@
 				{
 					"signature"	"g_arFakePorts"
 				}
+				"windows"
+				{
+					"signature"	"CSteam3Server::OnFakeIPResults()"
+					"read"		"135"
+				}
 			}
-			
+			"s_Steam3Server"
+			{
+				"windows"
+				{
+					"signature"	"sv_setsteamaccount_f()"
+					"read"		"5"
+					"offset"	"-4"
+				}
+			}
 		}
 		"Functions"
 		{
@@ -36,6 +54,17 @@
 			{
 				"library"	"engine"
 				"linux"		"@_Z12Steam3Serverv"
+			}
+			"CSteam3Server::OnFakeIPResults()"
+			{
+				// contains unique string "FakeIP allocation succeeded: %s"
+				"library"	"engine"
+				"windows"	"\x55\x8B\xEC\x8B\x4D\x08\x83\xEC\x1C"
+			}
+			"sv_setsteamaccount_f()"
+			{
+				"library"	"engine"
+				"windows"	"\x55\x8B\xEC\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x8B\x01\x8B\x40\x20"
 			}
 			
 			"g_nFakeIP"
@@ -55,11 +84,13 @@
 			{
 				// vcalled in status(CCommand const&)
 				"linux"		"8"
+				"windows"	"8"
 			}
 			"ISteamGameServer::WasRestartRequested()"
 			{
 				// vcalled early in CBaseServer::CheckMasterServerRequestRestart()
 				"linux"		"11"
+				"windows"	"11"
 			}
 		}
 		"Keys"

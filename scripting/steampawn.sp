@@ -29,6 +29,7 @@ Handle g_DHookRestartRequested;
 int g_nFakePorts;
 Address g_pnFakeIP;
 Address g_parFakePorts;
+Address g_pSteam3Server;
 
 GlobalForward g_FwdRestartRequested;
 
@@ -60,7 +61,12 @@ public void OnPluginStart() {
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 	g_SDKCallGetSteam3Server = EndPrepSDKCall();
 	if (!g_SDKCallGetSteam3Server) {
-		SetFailState("Failed to initialize SDKCall to Steam3Server");
+		g_pSteam3Server = GameConfGetAddress(hGameConf, "s_Steam3Server");
+		if (!g_pSteam3Server) {
+			SetFailState("Failed to get address to Steam3Server instance");
+		}
+	} else {
+		g_pSteam3Server = SDKCall(g_SDKCallGetSteam3Server);
 	}
 	
 	StartPrepSDKCall(SDKCall_Raw);
@@ -81,9 +87,6 @@ public void OnPluginStart() {
 	delete hGameConf;
 	
 	Address pSteamGameServer = GetSteamGameServer();
-	if (!pSteamGameServer) {
-		SetFailState("Failed to get SteamGameServer address");
-	}
 	DHookRaw(g_DHookRestartRequested, true, pSteamGameServer, .callback = OnRestartRequested);
 	
 	g_FwdRestartRequested = CreateGlobalForward("SteamPawn_OnRestartRequested", ET_Ignore);
@@ -118,11 +121,7 @@ int Native_GetSDRFakePort(Handle plugin, int argc) {
 }
 
 Address GetSteamGameServer() {
-	Address pSteam3Server = SDKCall(g_SDKCallGetSteam3Server);
-	if (!pSteam3Server) {
-		return Address_Null;
-	}
-	return DereferencePointer(pSteam3Server + view_as<Address>(0x04));
+	return DereferencePointer(g_pSteam3Server + view_as<Address>(0x04));
 }
 
 int GetSDRFakeIP() {
