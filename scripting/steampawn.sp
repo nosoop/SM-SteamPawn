@@ -67,18 +67,18 @@ public void OnPluginStart() {
 	
 	delete hGameConf;
 	
-	Address pSteam3Server = GetSteamGameServer();
-	if (!pSteam3Server) {
+	Address pSteamGameServer = GetSteamGameServer();
+	if (!pSteamGameServer) {
 		SetFailState("Failed to get SteamGameServer address");
 	}
-	DHookRaw(g_DHookRestartRequested, true, pSteam3Server, .callback = OnRestartRequested);
+	DHookRaw(g_DHookRestartRequested, true, pSteamGameServer, .callback = OnRestartRequested);
 	
 	g_FwdRestartRequested = CreateGlobalForward("SteamPawn_OnRestartRequested", ET_Ignore);
 	
 	CreateVersionConVar("steampawn_version");
 }
 
-MRESReturn OnRestartRequested(Address pSteam3Server, Handle hReturn) {
+MRESReturn OnRestartRequested(Address pSteamGameServer, Handle hReturn) {
 	bool bShouldRestart = !!DHookGetReturn(hReturn);
 	if (bShouldRestart) {
 		Call_StartForward(g_FwdRestartRequested);
@@ -87,12 +87,12 @@ MRESReturn OnRestartRequested(Address pSteam3Server, Handle hReturn) {
 }
 
 int Native_IsSteamConnected(Handle plugin, int argc) {
-	Address pSteam3Server = GetSteamGameServer();
-	if (!pSteam3Server) {
+	Address pSteamGameServer = GetSteamGameServer();
+	if (!pSteamGameServer) {
 		return false;
 	}
 	
-	return !!SDKCall(g_SDKCallIsLoggedOn, pSteam3Server);
+	return !!SDKCall(g_SDKCallIsLoggedOn, pSteamGameServer);
 }
 
 Address GetSteamGameServer() {
