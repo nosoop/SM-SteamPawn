@@ -40,3 +40,12 @@ public SharedPlugin __pl_steampawn = {
 	required = 0,
 #endif
 };
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_steampawn_SetNTVOptional()
+{
+	MarkNativeAsOptional("SteamPawn_IsSteamConnected");
+	MarkNativeAsOptional("SteamPawn_GetSDRFakeIP");
+	MarkNativeAsOptional("SteamPawn_GetSDRFakePort");
+}
+#endif
