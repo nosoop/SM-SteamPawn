@@ -1,7 +1,11 @@
 "Games"
 {
-	"tf"
+	"#default"
 	{
+		"#supported"
+		{
+			"engine"			"orangebox_valve"
+		}
 		"Addresses"
 		{
 			"g_nFakeIP"
